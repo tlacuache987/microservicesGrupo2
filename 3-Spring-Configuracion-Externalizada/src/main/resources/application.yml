@@ -1,0 +1,5 @@
+server:
+  port: 8081
+  
+controller:
+  message: Mi mensaje desde application.yml

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 //Define rest controller
+@RestController
 @SpringBootApplication
 public class Application {
 
@@ -18,9 +19,11 @@ public class Application {
 	}
 
 	// define propiedad controller.message:No message available
+	@Value("${controller.message:No message available}")
 	private String message;
 
 	// define propiedad server.port:8080
+	@Value("${server.port:8080}")
 	private int port;
 
 	@GetMapping("/")
