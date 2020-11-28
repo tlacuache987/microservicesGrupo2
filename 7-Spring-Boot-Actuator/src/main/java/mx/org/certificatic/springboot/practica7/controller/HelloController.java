@@ -83,7 +83,9 @@ public class HelloController {
 
 		StringBuilder sb = new StringBuilder();
 
-		if (SpelUtils.resolve("(features['say-hi']?.enabled)?:false", boolean.class))
+		//if (SpelUtils.resolve("(features['say-hi']?.enabled)?:false", boolean.class))
+		
+		if (features.get("say-hi").getEnabled())
 			sb.append(HELLO);
 		else
 			sb.append(BYE);

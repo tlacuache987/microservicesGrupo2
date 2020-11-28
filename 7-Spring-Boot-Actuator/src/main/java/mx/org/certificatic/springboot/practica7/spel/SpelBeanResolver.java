@@ -27,3 +27,6 @@ public class SpelBeanResolver implements BeanResolver, ApplicationContextAware {
 	}
 
 }
+
+// property place holders ${nombre.propiedad}
+// SpEL #{3+3+'@hola'}
