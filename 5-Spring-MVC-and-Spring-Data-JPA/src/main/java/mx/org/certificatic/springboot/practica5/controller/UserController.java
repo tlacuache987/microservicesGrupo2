@@ -7,39 +7,61 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mx.org.certificatic.springboot.practica5.entities.User;
 import mx.org.certificatic.springboot.practica5.services.impl.UserService;
 
 @Slf4j
 // define controller
+@Controller
+@AllArgsConstructor
 public class UserController {
 
 	// inyecta UserService por constructor
-
+	private UserService userService;
 	
-	@GetMapping("/")
-	public String index(Model model, @RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size) {
+	@GetMapping("/") // localhost:8080/?page=2&size=3
+	public String index(Model model, 
+						@RequestParam("page") Optional<Integer> page,
+						@RequestParam("size") Optional<Integer> size) {
 
-		int currentPage = 0;
-		int pageSize = 0;
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
 		
 		log.info("retrieving page of Users for page: {} of size: {}", currentPage-1, pageSize);
 
 		// Implementa
+		Pageable pageable = PageRequest.of(currentPage-1, pageSize);
 		
+		Page<User> usersPage = userService.findPaginated(pageable);
+		
+		model.addAttribute("usersPage", usersPage);
+		
+		int totalPages = usersPage.getTotalPages();
+		if(totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+												 .boxed()
+												 .collect(Collectors.toList());
+			
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+				
 		log.info("going to index view");
 		
 		return "index";
@@ -47,23 +69,28 @@ public class UserController {
 
 	@ResponseBody
 	@GetMapping("/all")
-	public Page<User> all(Model model, @RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size) {
+	public Page<User> all(Model model, 
+						  @RequestParam("page") Optional<Integer> page,
+						  @RequestParam("size") Optional<Integer> size) {
 		
-		int currentPage = 0;
-		int pageSize = 0;
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
 		
 		log.info("retrieving page of Users for page: {} of size: {}", currentPage-1, pageSize);
 
 		// Implementa
+		Pageable pageable = PageRequest.of(currentPage-1, pageSize);
+		
+		Page<User> usersPage = userService.findPaginated(pageable);
 
-		return null;
+		return usersPage;
 	}
 
 	@GetMapping("/add-user-form")
-	public String showSignUpForm(User user) {
+	public String showSignUpForm(Model model) {
 		
 		log.info("going to add-user-form view");
+		model.addAttribute("user", new User());
 		
 		return "add-user-form";
 	}
@@ -72,6 +99,14 @@ public class UserController {
 	public String addUser(@Valid User user, BindingResult result, Model model) {
 		
 		// Implementa
+		if(result.hasErrors()) {
+			log.info("going to add-user-form view, User input is invalid");
+			
+			return "add-user-form";
+		}
+		
+		log.info("saving User into DB");
+		userService.saveOrUpdate(user);
 
 		return "redirect:/";
 	}
@@ -82,6 +117,9 @@ public class UserController {
 		log.info("retrieving User with id: {}", id);
 
 		// Implementa
+		User user = userService.searchById(id);
+		
+		model.addAttribute("user", user);
 		
 		log.info("going to update-user-form view");
 
@@ -89,9 +127,19 @@ public class UserController {
 	}
 
 	@PostMapping("/update/{id}")
-	public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result, Model model) {
+	public String updateUser(@PathVariable("id") long id, 
+							 @Valid User user, BindingResult result, Model model) {
 		
 		// Implementa
+		if(result.hasErrors()) {
+			log.info("going to update-user-form view, User input is invalid");
+			user.setId(id);
+			
+			return "update-user-form";
+		}
+		
+		log.info("updating User into DB");
+		userService.saveOrUpdate(user);
 		
 		log.info("redirecting to '/' path");
 
@@ -102,9 +150,19 @@ public class UserController {
 	public String deleteUser(@PathVariable("id") long id, Model model) {
 		
 		// Implementa
+		log.info("retrieving User with id: {}", id);
+		User user = userService.searchById(id);
+		
+		log.info("deleting User with id: {}", id);
+		userService.delete(user);
 		
 		log.info("redirecting to '/' path");
 
+		return "redirect:/"; 
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public String illegalArgumentExceptionHandler() {
 		return "redirect:/";
 	}
 }
