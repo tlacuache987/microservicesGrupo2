@@ -32,6 +32,7 @@ public class AppDemoService {
 		log.info("[Client app] sending 'ticket reservation' event for ticket order Id {} to queue {}.",
 				event.getTicketOrderId(), TicketsMicroserviceQueues.TICKET_RESERVATION_QUEUE);
 		log.info("---");
+		
 		jmsTemplate.convertAndSend(TicketsMicroserviceQueues.TICKET_RESERVATION_QUEUE, event);
 	}
 
