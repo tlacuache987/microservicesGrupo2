@@ -16,20 +16,27 @@ import mx.org.certificatic.springboot.practica11.circuitbreaker.service.exceptio
 public class BusinessService implements IBusinessService {
 
 	// Define propiedades Rest Template y String failingServiceURL
+	private RestTemplate restTemplate;
+	
+	private String failingServiceURL;
 
 	// Inyecta propiedades por constructor
+	public BusinessService(RestTemplate restTemplate, String failingServiceURL) {
+		this.restTemplate = restTemplate;
+		this.failingServiceURL = failingServiceURL;
+	}
 
 	@SneakyThrows
 	@Override
 	public StatusResponse perform() {
 
 		// Define URI
-		URI uri = null;
+		URI uri = new URI(failingServiceURL);
 
 		try {
 
 			// Llama a la URI mediante REST Template
-			return null;
+			return restTemplate.getForObject(uri, StatusResponse.class);
 
 		} catch (ResourceAccessException ex) {
 
@@ -40,7 +47,6 @@ public class BusinessService implements IBusinessService {
 
 			log.info("uri: {} returns {} status code", uri.toString(), ex.getRawStatusCode());
 			throw new FailingServiceException(ex.getMessage());
-
 		}
 	}
 }
