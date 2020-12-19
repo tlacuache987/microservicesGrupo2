@@ -16,20 +16,36 @@ import mx.org.certificatic.springboot.practica10.retry.service.exception.Failing
 public class BusinessService implements IBusinessService {
 	
 	// Define propiedades Rest Template y String failingServiceURL
+	private RestTemplate restTemplate;
+	private String failingServiceURL;
 
 	
 	private @Setter int retries;
 	private @Setter int attempts;
 
 	// Inyecta propiedades Rest Template y String failingServiceURL por constructor
-	
+	public BusinessService(RestTemplate restTemplate, String failingServiceURL) {
+		this.restTemplate = restTemplate;
+		this.failingServiceURL = failingServiceURL;
+	}
 
 	@SneakyThrows
 	@Override
 	public StatusResponse perform() {
 
 		// Implementa
+		String statusCode = attempts < retries - 1 ? "500" : "200";
+		attempts++;
 		
-		return null;
+		URI uri = new URI(failingServiceURL + statusCode);
+		
+		try {
+			
+			return restTemplate.getForObject(uri, StatusResponse.class);
+			
+		} catch (HttpServerErrorException ex) {
+			log.info("URI: {} returns {} status code.", uri.toString(), ex.getRawStatusCode());
+			throw new FailingServiceException(ex.getMessage());
+		}
 	}
 }

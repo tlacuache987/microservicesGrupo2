@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 // Define Bean Rest Controller
+@RestController
 @SpringBootApplication
 public class Application {
 
@@ -16,4 +17,12 @@ public class Application {
 	}
 
 	// Implementa handler method "/{statusCode}"
+	@GetMapping("/{statusCode}")
+	public ResponseEntity<?> getResponse(@PathVariable int statusCode){
+		if(statusCode == 200) {
+			return ResponseEntity.ok(new StatusResponse(200, "UP"));
+		} else {
+			return ResponseEntity.status(500).body(new StatusResponse(500, "DOWN"));
+		}
+	}
 }
