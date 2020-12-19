@@ -11,8 +11,34 @@ import mx.org.certificatic.springboot.practica11.queuebasedloadleveling.task.ITa
 
 @Slf4j
 // elimina abstract
-public abstract class TaskService implements ITaskService {
+public class TaskService implements ITaskService {
 
 	// Implementa
+	private ExecutorService executorService;
+
+	private ObjectFactory<? extends ITaskProducer> taskProducerFactory;
+
+	public TaskService(ExecutorService executorService, ObjectFactory<? extends ITaskProducer> taskProducerFactory) {
+		this.executorService = executorService;
+		this.taskProducerFactory = taskProducerFactory;
+	}
+
+	@Override
+	public String triggerTasks(int triggeredTasks) {
+
+		int triggered = 0;
+
+		for (int i = 0; i < triggeredTasks; i++) {
+			ITaskProducer producer = taskProducerFactory.getObject();
+			
+			executorService.submit((Runnable) producer);
+
+			triggered++;
+
+			log.info("Task {} triggered !", (i + 1));
+		}
+
+		return String.format("%d tasks triggered", triggered);
+	}
 
 }

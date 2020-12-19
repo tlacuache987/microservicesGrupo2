@@ -7,8 +7,22 @@ import mx.org.certificatic.springboot.practica11.queuebasedloadleveling.task.ITa
 
 @Slf4j
 // elimina abstract
-public abstract class SimpleTaskConsumer implements ITaskConsumer {
+public class SimpleTaskConsumer implements ITaskConsumer {
 
 	// Implementa
+	private int delay;
+
+	public SimpleTaskConsumer(int delay) {
+		this.delay = delay;
+	}
+
+	@Override
+	@SneakyThrows
+	public void consume(Message message) {
+
+		Thread.sleep(delay);
+
+		log.info(message.getMessage() + " is consumed.");
+	}
 
 }
