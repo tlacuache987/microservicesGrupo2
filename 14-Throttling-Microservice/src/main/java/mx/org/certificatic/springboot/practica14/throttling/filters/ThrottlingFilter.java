@@ -30,10 +30,19 @@ import mx.org.certificatic.springboot.practica14.throttling.throttler.exception.
 
 @Slf4j
 // Define bean component
+@Component
 @Order(2)
 public class ThrottlingFilter implements Filter {
 
 	// Inyecta propiedades requeridas
+	@Autowired
+	private Map<String, Tenant> tenantsMap;
+	
+	@Autowired
+	private CallsCount counter;
+	
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -74,7 +83,7 @@ public class ThrottlingFilter implements Filter {
 			return null;
 		}
 		// devuelve el objeto serializado
-		return null;
+		return mapper.writeValueAsString(object);
 	}
 
 	private void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -85,5 +94,33 @@ public class ThrottlingFilter implements Filter {
 		String consumerId = httpRequest.getHeader("X-Authenticated-Id");
 
 		// Implementa
+		Tenant tenant = Optional.ofNullable(tenantsMap.get(consumerId))
+								.orElseThrow(() -> new TenantException("Unknow Tenant"));
+		
+		String tenantName = tenant.getName();
+		long count = counter.getCount(tenantName);
+		
+		log.info("Counter for {}: {}", tenant.getName(), count);
+		
+		if(count >= tenant.getAllowedCallsPerSecond()) {
+			log.error("API access per second limit reached for: {}", tenantName);
+			
+			throw new ThrottlerException(
+					"API access per second limit reached for: "+tenantName+". Too many requests.");
+		}
+		
+		counter.incrementCount(tenantName);
+		
+		chain.doFilter(httpRequest, httpResponse);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
