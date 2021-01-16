@@ -28,6 +28,24 @@ public class TransferController {
 
 		// Implementa
 		
-		return null;
+		Account tenantAccountFrom = AccountHolder.getAccount(tenantFrom);
+		Account tenantAccountTo = AccountHolder.getAccount(tenantTo);
+		
+		if(tenantAccountFrom != null && tenantAccountTo != null){
+			
+			MoneyTransferEvent moneyTransfer = new MoneyTransferEvent(
+					AccountHolder.nextEventId(),
+					new Date().getTime(),
+					tenantAccountFrom.getAccountNo(),
+					tenantAccountTo.getAccountNo(),
+					amount);
+
+			domainEventProcessor.process(moneyTransfer);
+			
+			return String.format("Transfer of $ %s, from %s to %s done !",
+					amount, tenantAccountFrom.getOwner(), tenantAccountTo.getOwner());
+		}
+		
+		return "Cannot transfer money !";
 	}
 }
