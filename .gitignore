@@ -12,6 +12,7 @@ local.properties
 .loadpath
 .recommenders
 0-Embedded-ActiveMQ-Broker-Service/activemq-data/
+1-Spring-Initializr/*
 
 */target/
 **/target/
