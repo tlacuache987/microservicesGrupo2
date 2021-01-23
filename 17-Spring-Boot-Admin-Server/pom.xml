@@ -21,11 +21,11 @@
 
 	<dependencies>
 		<!-- enable spring boot admin starter server -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-server</artifactId>
 			<version>2.1.5</version>
-		</dependency>-->
+		</dependency>
 		
 		<!-- enable spring boot starter security -->
 		<!-- <dependency>
