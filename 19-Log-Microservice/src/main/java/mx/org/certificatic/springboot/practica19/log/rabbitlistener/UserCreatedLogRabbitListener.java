@@ -2,6 +2,7 @@ package mx.org.certificatic.springboot.practica19.log.rabbitlistener;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.user.UserRegistryMessageHandler;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,13 +24,17 @@ public class UserCreatedLogRabbitListener {
 
 	@SneakyThrows
 	// Defina listener RabbitListener
+	@RabbitListener(queues = {"#{userCreatedLogQueue.name}"})
 	public void handleUserCreatedEvent(String message) {
 		log.info("rabbit listener User Created Log Event");
-		// Recupere objeto User
 		
-		// log.info("event: {}", user);
+		// Recupere objeto User
+		User user = objectMapper.readValue(message, User.class);
+		
+		log.info("user: {}", user);
 
 		// Almacene objeto User
+		userLogRepository.save(user);
 
 		log.info("--------------------------------------------------------------");
 	}

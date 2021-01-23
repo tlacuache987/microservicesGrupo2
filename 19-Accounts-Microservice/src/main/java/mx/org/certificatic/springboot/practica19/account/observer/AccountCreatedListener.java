@@ -17,4 +17,22 @@ import mx.org.certificatic.springboot.practica19.account.events.AccountCreatedEv
 public class AccountCreatedListener {
 
 	// Implemente lo necesario para cumplir con el requerimiento del slide 408
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	
+	@Autowired
+	private Queue accountCreatedLogQueue;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@SneakyThrows
+	@EventListener
+	public void handleAccountCreatedEvent(AccountCreatedEvent ace) {
+		log.info("sending Account Created Event to {}", accountCreatedLogQueue.getName());
+		
+		rabbitTemplate.convertAndSend(accountCreatedLogQueue.getName(), 
+									  objectMapper.writeValueAsString(ace));
+		log.info("--------------------------------------------------------------");
+	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import mx.org.certificatic.springboot.practica19.account.events.AccountCreatedEventBuilder;
 import mx.org.certificatic.springboot.practica19.account.model.Account;
+import mx.org.certificatic.springboot.practica19.account.observer.AccountCreatedListener;
 import mx.org.certificatic.springboot.practica19.account.repository.AccountRepository;
 
 @Slf4j
@@ -17,6 +18,8 @@ public class AccountService {
 	private AccountRepository accountRepository;
 
 	// Inyecte la dependencia faltante
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	public void createAccount(Account account) {
 
@@ -27,5 +30,8 @@ public class AccountService {
 		log.info("publishing Account Created Event");
 		
 		// Implemente la logica faltante
+		
+		publisher.publishEvent(AccountCreatedEventBuilder.build(account));	
 	}
+	
 }
