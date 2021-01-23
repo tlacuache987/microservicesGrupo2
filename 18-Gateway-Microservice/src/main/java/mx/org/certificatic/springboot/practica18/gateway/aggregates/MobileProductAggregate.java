@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MobileProductAggregate {
+public class MobileProductAggregate implements IProductAggregate {
 
 	private String price;
 

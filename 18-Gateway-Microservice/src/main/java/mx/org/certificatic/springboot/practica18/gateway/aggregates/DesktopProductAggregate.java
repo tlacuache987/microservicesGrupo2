@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DesktopProductAggregate {
+public class DesktopProductAggregate implements IProductAggregate {
 
 	private String price;
 	private String imagePath;
