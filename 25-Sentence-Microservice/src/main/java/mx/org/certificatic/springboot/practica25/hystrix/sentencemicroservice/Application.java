@@ -1,14 +1,15 @@
-package mx.org.certificatic.springboot.practica23.ribbon.agemicroservice;
-
-import java.util.Random;
+package mx.org.certificatic.springboot.practica25.hystrix.sentencemicroservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-// Habilita Eureka Client
+// Habilita Hystrix Dashboard
+// Habilita Circuit Breaker
+@EnableDiscoveryClient
 @SpringBootApplication
 public class Application {
 
@@ -16,14 +17,10 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
+	// Analiza
 	@Bean
-	public Random random() {
-		return new Random();
-	}
-
-	@Bean
-	// Define el Bean RestTemplate como LoadBalanced // Definido despues, al hacer la integración con 23-Random-Microservice
-	public RestTemplate loadBalancedRestTemplate() {
+	@LoadBalanced
+	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
 }
