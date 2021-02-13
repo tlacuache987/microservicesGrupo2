@@ -1,9 +1,10 @@
 # For 'peer-1' or 'peer-2' profile
 eureka:
-  peer-1:
-    host: eureka-host1
+  peer-1: #http://eureka-host1:9091
+    host: eureka-host1 
     port: 9091
-  peer-2:
+    
+  peer-2: #http://eureka-host2:9092
     host: eureka-host2
     port: 9092
 
@@ -24,9 +25,40 @@ spring:
   profiles: peer-1
 
 # 'peer-1' configuration
-    
+eureka:
+  instance:
+    # Windows c:\Windows\System32\Drivers\etc\hosts
+    # Linux, Mac /etc/hosts
+    hostname: ${eureka.peer-1.host}
+    appname: ${spring.application.name}-in-cluster
+  client:
+    service-url:
+      defaultZone: http://${eureka.peer-2.host}:${eureka.peer-2.port}${server.servlet.context-path}/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+server:
+  port: ${eureka.peer-1.port}
+
 ---
 spring:
   profiles: peer-2
 
 # 'peer-2' configuration
+eureka:
+  instance:
+    # Windows c:\Windows\System32\Drivers\etc\hosts
+    # Linux, Mac /etc/hosts
+    hostname: ${eureka.peer-2.host}
+    appname: ${spring.application.name}-in-cluster
+  client:
+    service-url:
+      defaultZone: http://${eureka.peer-1.host}:${eureka.peer-1.port}${server.servlet.context-path}/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+server:
+  port: ${eureka.peer-2.port}
+
+# 127.0.0.1 eureka-host1
+# 127.0.0.1 eureka-host2
