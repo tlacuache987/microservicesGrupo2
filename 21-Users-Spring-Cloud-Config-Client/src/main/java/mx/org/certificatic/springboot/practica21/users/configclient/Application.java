@@ -5,7 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 @SpringBootApplication
 public class Application {
 
@@ -18,6 +21,11 @@ public class Application {
 
 	@Value("${spring.profiles.active:no active profile}")
 	private String profile;
+
+	@GetMapping
+	public String hi() {
+		return hi + ", using profile: " + profile;
+	}
 
 	@Bean
 	public CommandLineRunner startUp() {
