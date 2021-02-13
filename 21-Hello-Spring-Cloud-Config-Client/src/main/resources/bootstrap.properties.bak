@@ -6,3 +6,7 @@ spring.cloud.config.profile=${spring.profiles.active}
 # branch to get config from remote
 spring.cloud.config.label=master
 
+encrypt.key=adaDADADSad324234adwqeqw234234ddasds
+
+
+guest='{cipher}9e5ae1cc5e41cc8a48b10030cc3edbd4459f35560cb138797965aa7a4997e2c6'

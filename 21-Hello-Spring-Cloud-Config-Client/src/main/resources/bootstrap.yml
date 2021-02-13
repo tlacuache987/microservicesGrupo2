@@ -1,0 +1,13 @@
+# Spring Cloud Config Client configuration
+spring:
+  cloud:
+    config:
+      uri: http://localhost:9090/my-config-server
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+
+# branch to get config from remote      
+      label: master
+
+encrypt:
+  key: adaDADADSad324234adwqeqw234234ddasds

@@ -1,0 +1,19 @@
+# Spring application properties
+spring.application.name=HelloService
+
+server.servlet.context-path=/hello-config-client
+server.port=9091
+
+spring.profiles.active=pre
+
+hello.message=XXX
+
+# 1. Agregar dependencias para Spring Cloud Bus
+# 2. Agregar configuración para RabbitMQ
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=guest
+spring.rabbitmq.password=guest
+
+# 3. Exponer el actuator bus-refresh y bus-env
+management.endpoints.web.exposure.include=bus-refresh,bus-env
