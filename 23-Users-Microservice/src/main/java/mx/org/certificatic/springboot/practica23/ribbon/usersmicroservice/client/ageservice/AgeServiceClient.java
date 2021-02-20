@@ -1,4 +1,4 @@
-package mx.org.certificatic.springboot.practica23.ribbon.usersmicroservice.client;
+package mx.org.certificatic.springboot.practica23.ribbon.usersmicroservice.client.ageservice;
 
 import java.net.URI;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class AgeServiceClient {
 	private String serviceName;
 
 	@SneakyThrows
-	public int getAge() {
+	public int getAge(Map<String, String> vars) {
 		
 		// Implementa
 		URI uri = URI.create(String.format("http://%s/age-service/age", serviceName));
@@ -31,6 +31,8 @@ public class AgeServiceClient {
 		Map<String, Object> mapResponse = loadBalancedRestTemplate.getForObject(uri, Map.class);
 		
 		log.info("Service: {}, response: {}", serviceName, mapResponse);
+		
+		vars.put("from-age-service", mapResponse.get("from").toString());
 		
 		return Integer.valueOf(mapResponse.get("age").toString());
 	}
