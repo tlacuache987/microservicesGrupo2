@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AgeServiceClient {
 
 	//Inyecta Bean Balanceado con Ribbon RestTemplate loadBalancedRestTemplate
+	@Autowired
+	private RestTemplate loadBalancedRestTemplate;
 
 	@Value("${age-service-name:age-microservice}")
 	private String serviceName;
@@ -24,8 +26,13 @@ public class AgeServiceClient {
 	public int getAge() {
 		
 		// Implementa
+		URI uri = URI.create(String.format("http://%s/age-service/age", serviceName));
 		
-		return 0;
+		Map<String, Object> mapResponse = loadBalancedRestTemplate.getForObject(uri, Map.class);
+		
+		log.info("Service: {}, response: {}", serviceName, mapResponse);
+		
+		return Integer.valueOf(mapResponse.get("age").toString());
 	}
 
 }

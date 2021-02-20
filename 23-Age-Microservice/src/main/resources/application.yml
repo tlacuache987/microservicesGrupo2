@@ -5,7 +5,8 @@ eureka:
     port: 9099
   client:
     service-url: 
-      defaultZone: # set Eureka defaultZone
+      # set Eureka defaultZone
+      defaultZone: http://${eureka.single-instance.host}:${eureka.single-instance.port}${eureka.context-path}/eureka
   instance:
     statusPageUrlPath: ${server.servlet.context-path}${management.endpoints.web.base-path}/info
     healthCheckUrlPath: ${server.servlet.context-path}${management.endpoints.web.base-path}/health
