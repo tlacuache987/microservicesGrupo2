@@ -43,7 +43,7 @@ public class Application {
 	@Autowired
 	private Environment env;
 
-	@GetMapping("/next")
+	@GetMapping("/next") // http://random-microservice/random-service/next
 	public Map<String, Object> next() {
 
 		Map<String, Object> map = new LinkedHashMap<>();

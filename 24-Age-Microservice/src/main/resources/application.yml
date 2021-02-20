@@ -42,6 +42,7 @@ logging:
   level:
     #org.apache.http: DEBUG 
     # enable IRandomServiceClient Feign Client level DEBUG
+    mx.org.certificatic.springboot.practica24.feign.agemicroservice.client.IRandomServiceClient: DEBUG
     org.springframework.cloud: INFO
     com.netflix.loadbalancer: OFF
 

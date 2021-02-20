@@ -42,7 +42,9 @@ logging:
   level:
     #org.apache.http: DEBUG
     # enable IAgeServiceClient Feign Client level DEBUG
+    mx.org.certificatic.springboot.practica24.feign.usersmicroservice.client.IAgeServiceClient: DEBUG
     # enable IUppercaseServiceClient Feign Client level DEBUG
+    mx.org.certificatic.springboot.practica24.feign.usersmicroservice.client.IUppercaseServiceClient: DEBUG
     org.springframework.cloud: OFF
     com.netflix.loadbalancer: OFF
     
