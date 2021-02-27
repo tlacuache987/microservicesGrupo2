@@ -40,8 +40,8 @@ management:
         include: '*'
 
 #sustantivos
-#words: boat,book,vote,seat,backpack,partition,groundhog
-words: barco,libro,bicicleta,asiento,mochila,camello,marmota
+words: boat,book,vote,seat,backpack,partition,groundhog
+#words: barco,libro,bicicleta,asiento,mochila,camello,marmota
 
 logging:
   level:

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import mx.org.certificatic.springboot.practica25.hystrix.sentencemicroservice.client.IArticleServiceClient;
@@ -24,6 +26,7 @@ public class ArticleServiceClient implements IArticleServiceClient {
 	@Override
 	@SneakyThrows
 	// Define comando Hystrix
+	@HystrixCommand(fallbackMethod = "defaultArticle")
 	public String getArticle() {
 		URI uri = new URI(String.format("http://%s/word", serviceName));
 

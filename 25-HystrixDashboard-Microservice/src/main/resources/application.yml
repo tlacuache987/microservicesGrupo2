@@ -40,6 +40,7 @@ turbine:
     #cluster-config: SENTENCE-MICROSERVICE,NOUN-MICROSERVICE
   app-config: sentence-microservice,noun-microservice
   cluster-name-expression: "'default'"
+
   
 
 logging:
