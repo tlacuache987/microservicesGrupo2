@@ -23,7 +23,7 @@ public class EmployeeRestController {
 	private Environment env;
 
 	@GetMapping("/employees")
-	public Map<String, Object> age() {
+	public Map<String, Object> employees() {
 
 		log.info("sending employees");
 

@@ -23,7 +23,7 @@ public class PrincipalRestController {
 	private Environment env;
 
 	@GetMapping("/principals")
-	public Map<String, Object> age() {
+	public Map<String, Object> principals() {
 
 		log.info("sending age");
 

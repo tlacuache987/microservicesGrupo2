@@ -42,6 +42,18 @@ management:
         include: '*'
 
 # Zuul Configuration
+zuul:
+  ribbon-isolation-strategy: semaphore
+  ignored-services: uppercase-microservice
+  routes:
+    upper:
+      path: /upper/**
+      service-id: uppercase-microservice
+      # strip-prefix: true #StripPrefix default is true
+      
+      # If wants to route to /upper/toUppercase/{name} in uppercase-microservice needs strip-prefix: false
+      strip-prefix: false
+      
 
 
 logging:
